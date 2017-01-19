@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tutorial_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -14,16 +13,25 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/screen_1_title"
-        android:textSize="@dimen/headline"/>
-
-
+        android:textSize="@dimen/headline" />
+    
     <ImageView
         android:id="@+id/device_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:scaleType="centerInside"/>
+        android:contentDescription="@string/tutorial_image"
+        android:scaleType="centerInside" />
+
+    <Button
+        android:text="Skip Tutorial"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textAllCaps="false"
+        android:id="@+id/skip_button" />
 
     <org.buildmlearn.toolkit.views.TextViewPlus
         android:id="@+id/tutorial_desc"
@@ -33,5 +41,5 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/screen_1_desc"
-        android:textSize="@dimen/body"/>
+        android:textSize="@dimen/body" />
 </LinearLayout>

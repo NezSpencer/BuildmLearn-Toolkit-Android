@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/buildmlearn_backdrop_image"
         android:scaleType="centerCrop"
         android:src="@drawable/first_run_bg" />
 
@@ -23,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/buildmlearn_logo"
             android:scaleType="centerCrop"
             android:src="@drawable/logo_70" />
 
@@ -57,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:ems="10"
-            android:gravity="center_horizontal"
+            
             android:hint="@string/main_name_hint"
             android:inputType="textPersonName"
             android:paddingLeft="20dp"

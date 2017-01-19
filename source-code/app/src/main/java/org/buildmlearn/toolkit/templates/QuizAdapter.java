@@ -1,6 +1,10 @@
 package org.buildmlearn.toolkit.templates;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.buildmlearn.toolkit.R;
 import org.buildmlearn.toolkit.activity.TemplateEditor;
@@ -26,11 +27,11 @@ import java.util.ArrayList;
  * <p/>
  * Created by abhishek on 28/5/15.
  */
-public class QuizAdapter extends BaseAdapter {
+class QuizAdapter extends BaseAdapter {
 
 
-    private Context context;
-    private ArrayList<QuizModel> quizData;
+    private final Context context;
+    private final ArrayList<QuizModel> quizData;
     private int expandedPostion = -1;
 
     public QuizAdapter(Context context, ArrayList<QuizModel> quizData) {
@@ -90,7 +91,8 @@ public class QuizAdapter extends BaseAdapter {
         for (int i = 0; i < holder.options.size(); i++) {
             if (i < data.getOptions().size()) {
                 int ascii = 65 + i;
-                holder.options.get(i).setText(Character.toString((char) ascii) + ")  " + data.getOptions().get(i));
+                holder.options.get(i).setText(String.format("%s) %s", Character.toString((char) ascii), data.getOptions().get(i)));
+                holder.options.get(i).setTextColor(ContextCompat.getColor(context, R.color.black_secondary_text));
                 holder.options.get(i).setVisibility(View.VISIBLE);
             } else {
                 holder.options.get(i).setVisibility(View.GONE);
@@ -98,7 +100,7 @@ public class QuizAdapter extends BaseAdapter {
         }
 
         holder.options.get(data.getCorrectAnswer()).setCustomFont(context, "roboto_medium.ttf");
-        holder.options.get(data.getCorrectAnswer()).setTextColor(context.getResources().getColor(R.color.quiz_correct_answer));
+        holder.options.get(data.getCorrectAnswer()).setTextColor(ContextCompat.getColor(context, R.color.quiz_correct_answer));
 
         holder.questionIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,27 +128,21 @@ public class QuizAdapter extends BaseAdapter {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final QuizModel learnSpellingModel = quizData.get(position);
+                quizData.remove(position);
+                notifyDataSetChanged();
+                Snackbar.make(v,R.string.snackbar_deleted_message,Snackbar.LENGTH_LONG)
+                        .setAction(R.string.snackbar_undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                quizData.add(position,learnSpellingModel);
+                                notifyDataSetChanged();
+                                Snackbar.make(v,R.string.snackbar_restored_message,Snackbar.LENGTH_LONG).show();
+                            }
+                        }).show();
 
-                final MaterialDialog dialog = new MaterialDialog.Builder(context)
-                        .title(R.string.dialog_delete_title)
-                        .content(R.string.dialog_delete_msg)
-                        .positiveText(R.string.dialog_yes)
-                        .negativeText(R.string.dialog_no)
-                        .build();
-
-                dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        quizData.remove(position);
-                        notifyDataSetChanged();
-                        dialog.dismiss();
-
-                        ((TemplateEditor) context).restoreSelectedView();
-                        expandedPostion = -1;
-                    }
-                });
-
-                dialog.show();
+                ((TemplateEditor) context).restoreSelectedView();
+                expandedPostion = -1;
             }
         });
         convertView.setTag(holder);
@@ -156,25 +152,31 @@ public class QuizAdapter extends BaseAdapter {
     private void editItem(final int position, final Context context) {
         QuizModel data = getItem(position);
 
-        boolean wrapInScrollView = true;
-        final MaterialDialog dialog = new MaterialDialog.Builder(context)
-                .title(R.string.quiz_edit)
-                .customView(R.layout.quiz_dialog_add_question, wrapInScrollView)
-                .positiveText(R.string.quiz_add)
-                .negativeText(R.string.quiz_delete)
-                .build();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final View dialogView = inflater.inflate(R.layout.quiz_dialog_add_question, null);
+        final AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.quiz_edit)
+                .setView(dialogView,
+                        context.getResources().getDimensionPixelSize(R.dimen.spacing_left),
+                        context.getResources().getDimensionPixelSize(R.dimen.spacing_top),
+                        context.getResources().getDimensionPixelSize(R.dimen.spacing_right),
+                        context.getResources().getDimensionPixelSize(R.dimen.spacing_bottom))
+                .setPositiveButton(R.string.quiz_add, null)
+                .setNegativeButton(R.string.quiz_cancel, null)
+                .create();
+        dialog.show();
 
-        final EditText question = (EditText) dialog.findViewById(R.id.quiz_question);
+        final EditText question = (EditText) dialogView.findViewById(R.id.quiz_question);
         final ArrayList<RadioButton> buttons = new ArrayList<>();
         final ArrayList<EditText> options = new ArrayList<>();
-        options.add((EditText) dialog.findViewById(R.id.quiz_option_1));
-        options.add((EditText) dialog.findViewById(R.id.quiz_option_2));
-        options.add((EditText) dialog.findViewById(R.id.quiz_option_3));
-        options.add((EditText) dialog.findViewById(R.id.quiz_option_4));
-        buttons.add((RadioButton) dialog.findViewById(R.id.quiz_radio_1));
-        buttons.add((RadioButton) dialog.findViewById(R.id.quiz_radio_2));
-        buttons.add((RadioButton) dialog.findViewById(R.id.quiz_radio_3));
-        buttons.add((RadioButton) dialog.findViewById(R.id.quiz_radio_4));
+        options.add((EditText) dialogView.findViewById(R.id.quiz_option_1));
+        options.add((EditText) dialogView.findViewById(R.id.quiz_option_2));
+        options.add((EditText) dialogView.findViewById(R.id.quiz_option_3));
+        options.add((EditText) dialogView.findViewById(R.id.quiz_option_4));
+        buttons.add((RadioButton) dialogView.findViewById(R.id.quiz_radio_1));
+        buttons.add((RadioButton) dialogView.findViewById(R.id.quiz_radio_2));
+        buttons.add((RadioButton) dialogView.findViewById(R.id.quiz_radio_3));
+        buttons.add((RadioButton) dialogView.findViewById(R.id.quiz_radio_4));
 
         for (int i = 0; i < data.getOptions().size(); i++) {
             options.get(i).setText(data.getOptions().get(i));
@@ -192,7 +194,7 @@ public class QuizAdapter extends BaseAdapter {
             });
         }
 
-        dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener(new View.OnClickListener() {
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -219,9 +221,18 @@ public class QuizAdapter extends BaseAdapter {
                     isValidated = false;
                 }
 
+                for (int i = 0; i < options.size(); i++) {
+                    for (int j = 0; j < i; j++) {
+                        if (!options.get(i).getText().toString().trim().isEmpty() && options.get(i).getText().toString().trim().equalsIgnoreCase(options.get(j).getText().toString().trim())) {
+                            Toast.makeText(context, context.getString(R.string.same_options), Toast.LENGTH_SHORT).show();
+                            isValidated = false;
+                        }
+                    }
+                }
+
                 if (isValidated) {
                     dialog.dismiss();
-                    ArrayList<String> answerOptions = new ArrayList<String>();
+                    ArrayList<String> answerOptions = new ArrayList<>();
                     int correctAnswer = 0;
                     for (int i = 0; i < buttons.size(); i++) {
                         if (buttons.get(i).isChecked() && !options.get(i).getText().toString().equals("")) {
@@ -238,8 +249,6 @@ public class QuizAdapter extends BaseAdapter {
 
             }
         });
-        dialog.show();
-
     }
 
     private void checkButton(ArrayList<RadioButton> buttons, ArrayList<EditText> options, int id, Context context) {
@@ -269,11 +278,11 @@ public class QuizAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        TextViewPlus question;
-        ImageView questionIcon;
-        ArrayList<TextViewPlus> options;
-        LinearLayout quizOptionsBox;
-        Button delete;
-        Button edit;
+        public TextViewPlus question;
+        public ImageView questionIcon;
+        public ArrayList<TextViewPlus> options;
+        public LinearLayout quizOptionsBox;
+        public Button delete;
+        public Button edit;
     }
 }

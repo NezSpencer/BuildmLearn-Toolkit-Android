@@ -11,7 +11,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/layout_margin">
 
@@ -31,9 +31,9 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/logo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/buildmlearn_logo"
                         android:src="@drawable/logo_70" />
 
                     <view
@@ -44,7 +44,6 @@
 
 
                     <view
-                        android:id="@+id/subtext"
                         style="@style/CardView.Body"
                         class="org.buildmlearn.toolkit.views.TextViewPlus"
                         android:text="@string/buildmlearn_welcome_text" />
@@ -112,8 +111,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/floating_action_button_padding_bottom_right"
+        android:layout_marginEnd="@dimen/floating_action_button_padding_bottom_right"
         android:layout_marginRight="@dimen/floating_action_button_padding_bottom_right"
         android:src="@drawable/ic_add_white_24dp"
         fab:backgroundTint="@color/color_accent"

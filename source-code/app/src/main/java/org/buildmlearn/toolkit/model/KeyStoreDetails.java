@@ -2,18 +2,18 @@ package org.buildmlearn.toolkit.model;
 
 /**
  * @brief Model class for holding the details of keystore file.
- *
+ * <p/>
  * Created by abhishek on 11/06/15 at 2:19 PM.
  */
 public class KeyStoreDetails {
 
-    private String assetsPath;
-    private String password;
-    private String alias;
-    private String aliasPassword;
+    private final String assetsPath;
+    private final String password;
+    private final String alias;
+    private final String aliasPassword;
 
-    public KeyStoreDetails(String assetsPath, String password, String alias, String aliasPassword) {
-        this.assetsPath = assetsPath;
+    public KeyStoreDetails(String password, String alias, String aliasPassword) {
+        this.assetsPath = "TestKeyStore.jks";
         this.password = password;
         this.alias = alias;
         this.aliasPassword = aliasPassword;

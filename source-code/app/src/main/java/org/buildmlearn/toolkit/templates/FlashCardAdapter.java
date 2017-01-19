@@ -1,6 +1,8 @@
 package org.buildmlearn.toolkit.templates;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.buildmlearn.toolkit.R;
 import org.buildmlearn.toolkit.activity.TemplateEditor;
@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 /**
  * @brief Adapter for displaying Flash Card Template Editor data.
- *
+ * <p/>
  * Created by abhishek on 12/07/15 at 11:56 PM.
  */
-public class FlashCardAdapter extends BaseAdapter {
+class FlashCardAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private ArrayList<FlashCardModel> mData;
+    private final Context mContext;
+    private final ArrayList<FlashCardModel> mData;
 
     public FlashCardAdapter(Context context, ArrayList<FlashCardModel> data) {
         mContext = context;
@@ -88,27 +88,23 @@ public class FlashCardAdapter extends BaseAdapter {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final FlashCardModel flashCardModel = mData.get(position);
+                mData.remove(position);
+                notifyDataSetChanged();
+                notifyDataSetChanged();
+                Snackbar.make(v,R.string.snackbar_deleted_message,Snackbar.LENGTH_LONG)
+                        .setAction(R.string.snackbar_undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mData.add(position,flashCardModel);
+                                notifyDataSetChanged();
+                                Snackbar.make(v,R.string.snackbar_restored_message,Snackbar.LENGTH_LONG).show();
+                            }
+                        }).show();
 
-                final MaterialDialog dialog = new MaterialDialog.Builder(mContext)
-                        .title(R.string.info_template_delete)
-                        .content(R.string.info_delete_item_content)
-                        .positiveText(R.string.dialog_yes)
-                        .negativeText(R.string.dialog_no)
-                        .build();
 
-                dialog.getActionButton(DialogAction.POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mData.remove(position);
-                        notifyDataSetChanged();
-                        dialog.dismiss();
 
-                        ((TemplateEditor) mContext).restoreSelectedView();
-                    }
-                });
-
-                dialog.show();
-
+                ((TemplateEditor) mContext).restoreSelectedView();
             }
         });
 
@@ -119,12 +115,12 @@ public class FlashCardAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        TextView question;
-        TextView answer;
-        TextView hint;
-        ImageView image;
-        ImageView edit;
-        ImageView delete;
+        public TextView question;
+        public TextView answer;
+        public TextView hint;
+        public ImageView image;
+        public ImageView edit;
+        public ImageView delete;
 
     }
 }

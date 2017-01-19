@@ -5,24 +5,35 @@ import java.text.SimpleDateFormat;
 
 /**
  * @brief Model class for holding the details of a Saved File
- *
+ * <p/>
  * Created by Abhishek on 01-06-2015.
  */
 public class SavedProject {
 
+    private final String fullPath;
     private File file;
-
     private String name;
     private String date;
+    private String time;
     private String type;
     private String author;
-    private String fullPath;
+    private long unformattedDate;
+    private boolean isSelected = false;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public SavedProject(File file, String fileName, long date, String type, String fullPath) {
 
         this.file = file;
         this.fullPath = fullPath;
         this.date = formatDate(date);
+        this.time = formatTime(date);
         this.type = type;
         String[] data = fileName.split("-by-");
         try {
@@ -46,6 +57,11 @@ public class SavedProject {
         return sdf.format(time);
     }
 
+    private String formatTime(long time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        return sdf.format(time);
+    }
+
     public String getName() {
         return name;
     }
@@ -60,6 +76,10 @@ public class SavedProject {
 
     public void setDate(long date) {
         this.date = formatDate(date);
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public String getType() {
@@ -88,5 +108,9 @@ public class SavedProject {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public long getUnformattedDate() {
+        return unformattedDate;
     }
 }

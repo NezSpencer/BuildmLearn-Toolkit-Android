@@ -1,16 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="org.buildmlearn.toolkit.activity.TemplateEditor">
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.buildmlearn.toolkit.activity.TemplateEditor">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Toolbar.Buildmlearn"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="center_horizontal|top"/>
+        android:layout_gravity="center_horizontal|top" />
 
     <ListView
         android:id="@+id/template_editor_listview"
@@ -18,9 +19,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
+        android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"/>
+        android:dividerHeight="8dp"
+        android:paddingBottom="@dimen/cardview_padding_last_bottom" />
 
     <LinearLayout
         android:id="@+id/empty"
@@ -34,13 +36,13 @@
 
 
         <view
-            android:id="@+id/title"
+            android:id="@+id/empty_view_text"
             style="@style/TextView.Empty"
             class="org.buildmlearn.toolkit.views.TextViewPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/md_simplelist_icon_margin"
-            android:text="@string/add_item_help"/>
+            android:padding="@dimen/padding_small"
+            android:text="@string/add_item_help" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -48,8 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/floating_action_button_padding_bottom_right"
+        android:layout_marginEnd="@dimen/floating_action_button_padding_bottom_right"
         android:layout_marginRight="@dimen/floating_action_button_padding_bottom_right"
         android:src="@drawable/ic_add_white_24dp"
         fab:backgroundTint="@color/color_accent"

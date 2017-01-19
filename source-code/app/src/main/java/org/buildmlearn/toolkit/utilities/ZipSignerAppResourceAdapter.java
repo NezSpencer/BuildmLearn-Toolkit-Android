@@ -9,9 +9,9 @@ import kellinwood.security.zipsigner.ResourceAdapter;
 /**
  * @brief Provides internationalized progress and error strings to the zipsigner-lib API.
  */
-public class ZipSignerAppResourceAdapter implements ResourceAdapter {
+class ZipSignerAppResourceAdapter implements ResourceAdapter {
 
-    Resources resources;
+    private final Resources resources;
 
     public ZipSignerAppResourceAdapter(Resources resources) {
         this.resources = resources;
@@ -43,7 +43,7 @@ public class ZipSignerAppResourceAdapter implements ResourceAdapter {
                 return resources.getString(R.string.GeneratingSignatureBlock);
             case COPYING_ZIP_ENTRY:
                 // return String.format("Copying zip entry %d of %d", args[0], args[1]);
-                return resources.getString(R.string.CopyingZipEntry, (int) args[0], (int) args[1]);
+                return resources.getString(R.string.CopyingZipEntry, args[0], args[1]);
             default:
                 throw new IllegalArgumentException("Unknown item " + item);
         }
